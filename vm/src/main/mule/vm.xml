@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:vm="http://www.mulesoft.org/schema/mule/vm" xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/vm http://www.mulesoft.org/schema/mule/vm/current/mule-vm.xsd">
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="d72d3e8e-fe99-49b3-b41a-2fdedd0dde92" >
+		<http:listener-connection host="0.0.0.0" port="8081" />
+	</http:listener-config>
+	<vm:config name="VM_Config" doc:name="VM Config" doc:id="5444019b-3ec7-4d91-91de-efced663e37f" >
+		<vm:queues >
+			<vm:queue queueName="venugopal" />
+		</vm:queues>
+	</vm:config>
+	<http:listener-config name="HTTP_Listener_config1" doc:name="HTTP Listener config" doc:id="9fd1be25-0ae6-4155-a33f-a02fcefdd661" >
+		<http:listener-connection host="0.0.0.0" port="8081" />
+	</http:listener-config>
+	<flow name="vmFlow" doc:id="3e642648-bf8e-4e68-bc73-8d1db24b71da" >
+		<http:listener doc:name="Listener" doc:id="2b8a5ee1-9217-44f3-9658-705ba683f3e4" config-ref="HTTP_Listener_config" path="vm"/>
+		<vm:publish queueName="venugopal" doc:name="Publish" doc:id="c0b0b10e-e08e-4c9e-8d22-a34bb7920edc" config-ref="VM_Config"/>
+	</flow>
+	<flow name="vmFlow1" doc:id="5511f9ac-1873-49c8-ab42-983f9fd7166f" >
+		<http:listener doc:name="Listener" doc:id="f86e2abe-327c-47cd-8c77-e1c57ebd283c" config-ref="HTTP_Listener_config1" path="vm"/>
+		<vm:consume queueName="venugopal" doc:name="Consume" doc:id="3e6765c5-08fc-49c3-ab60-d4479c017db9" config-ref="VM_Config"/>
+		<logger level="INFO" doc:name="Logger" doc:id="ebacad3c-8476-4359-b612-e84227df65b9" message="#[payload]"/>
+	</flow>
+</mule>
